@@ -76,9 +76,9 @@ void setup() {
   ArduinoOTA.begin();
 
   initKeyboardController();
-  initGameController();
   initDisplayController();
   initSoundController();
+  initGameController();
 
 /*  ledcAttachPin(OUTPIN, PWM_CHANNEL);
   ledcSetup(PWM_CHANNEL, 39062, 11); // max frequency, 11 bit resolution, i.e. 39062,5hz

@@ -17,6 +17,9 @@ void copy(const CRGB *source);
 /*void copy(const char *source);
 void showDigit(char row, char number);
 void showNumber(int number);*/
+
+void showNumber37(int8_t num);
+
 void showScroller(const char *text, int scrollPos, bool smooth, CRGB color);
 void showScrollerRainbow(const char *text, int scrollPos, bool smooth);
 void showScroller(const char *text, int scrollPos, bool smooth, bool rainbow, CRGB color);

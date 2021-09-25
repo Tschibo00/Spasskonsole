@@ -9,7 +9,8 @@ class BossGame: public Game {
     int8_t xB,yB;
     int bossEnd;
     int bossNextStep;
-    int bossSpeed=5;
+    int bossSpeed=7;
+    int8_t bossCounter=7;
     bool isBoss;
     bool isLeaving;
 

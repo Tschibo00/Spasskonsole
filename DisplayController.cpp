@@ -162,3 +162,86 @@ CRGB getFullColor(uint8_t c){
   uint8_t b=c&3;
   return CRGB(levels8[r],levels8[g],levels4[b]);
 }
+
+void showDigit37(uint8_t num, CRGB c, uint8_t x){
+  switch(num){
+    case 0:
+      set(x+1,1,c);
+      set(x,2,c); set(x+2,2,c);
+      set(x,3,c); set(x+2,3,c);
+      set(x,4,c); set(x+2,4,c);
+      set(x+1,5,c);
+      break;
+    case 1:
+      set(x+1,1,c);
+      set(x,2,c); set(x+1,2,c);
+      set(x+1,3,c);
+      set(x+1,4,c);
+      set(x,5,c); set(x+1,5,c); set(x+2,5,c);
+      break;
+    case 2:
+      set(x,1,c); set(x+1,1,c);
+      set(x+2,2,c);
+      set(x+1,3,c);
+      set(x,4,c);
+      set(x,5,c); set(x+1,5,c); set(x+2,5,c);
+      break;
+    case 3:
+      set(x,1,c); set(x+1,1,c);
+      set(x+2,2,c);
+      set(x+1,3,c);
+      set(x+2,4,c);
+      set(x,5,c); set(x+1,5,c);
+      break;
+    case 4:
+      set(x,1,c);
+      set(x,2,c); set(x+2,2,c);
+      set(x,3,c); set(x+1,3,c); set(x+2,3,c);
+      set(x+2,4,c);
+      set(x+2,5,c);
+      break;
+    case 5:
+      set(x,1,c); set(x+1,1,c); set(x+2,1,c);
+      set(x,2,c);
+      set(x,3,c); set(x+1,3,c);
+      set(x+2,4,c);
+      set(x,5,c); set(x+1,5,c);
+      break;
+    case 6:
+      set(x+1,1,c); set(x+2,1,c);
+      set(x,2,c);
+      set(x,3,c); set(x+1,3,c);
+      set(x,4,c); set(x+2,4,c);
+      set(x+1,5,c);
+      break;
+    case 7:
+      set(x,1,c); set(x+1,1,c); set(x+2,1,c);
+      set(x+2,2,c);
+      set(x+1,3,c);
+      set(x+1,4,c);
+      set(x+1,5,c);
+      break;
+    case 8:
+      set(x+1,1,c);
+      set(x,2,c); set(x+2,2,c);
+      set(x+1,3,c);
+      set(x,4,c); set(x+2,4,c);
+      set(x+1,5,c);
+      break;
+    case 9:
+      set(x+1,1,c);
+      set(x,2,c); set(x+2,2,c);
+      set(x+1,3,c); set(x+2,3,c);
+      set(x+2,4,c);
+      set(x,5,c); set(x+1,5,c);
+      break;
+  }
+}
+
+void showNumber37(int8_t num){
+  int8_t n=abs(num);
+  bool neg=(num<0);
+  if (n>99) n=99;
+  showDigit37(n/10, neg?CRGB::Red:CRGB::Green, 0);
+  showDigit37(n%10, neg?CRGB::Red:CRGB::Green, 4);
+}

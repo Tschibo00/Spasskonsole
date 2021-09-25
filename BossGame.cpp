@@ -35,13 +35,6 @@ void BossGame::play(){
     set(xB,yB+1,CRGB::Green);
     set(xB+1,yB+1,CRGB::Purple);
   }
-
-
-
-//  for (uint8_t i=0;i<64;i++)
-  //  set(i%8,i/8,getFullColor(screen[i]));
-
-  
 }
 
 void BossGame::initLevel(){
@@ -74,10 +67,17 @@ void BossGame::initBoss(){
     xB=random(3)*7-3;
     yB=random(3)*7-3;
   }while((xB==4)&&(yB==4));   // don't allow to start on middle of screen
-  isBoss=random(7)==0;
+  bossCounter--;
+  if (bossCounter<0){
+    isBoss=true;
+    bossCounter=7;
+    bossSpeed--;
+    if (bossSpeed<1) bossSpeed=1;
+  }else
+    isBoss=false;
   isLeaving=false;
-  if (isBoss)
-    playSound(0.9f);
+ // if (isBoss)
+   // playSound(0.9f);
 }
 
 void BossGame::moveBoss(){

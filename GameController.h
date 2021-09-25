@@ -9,9 +9,10 @@
 //#include "DisplayController.h"
 //#include "SoundController.h"
 
-#define GAME_STARTUP 0
-#define GAME_PLAYER_SELECTION 1
-#define GAME_RUNNING 2
+#define GAME_BATTERY 0
+#define GAME_STARTUP 1
+#define GAME_PLAYER_SELECTION 2
+#define GAME_RUNNING 3
 
 void initGameController();
 void selectGame(int game);

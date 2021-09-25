@@ -1,13 +1,14 @@
 #include "GameController.h"
+#include "BatteryMonitor.h"
 
 #define GAME_COUNT 1
 
 Game *runningGame = NULL;
-char state = GAME_STARTUP;    // TODO should be GAME_STARTUP
+char state = GAME_BATTERY;
 int currentGame = 0;        // TODO should be -1
 char selectedPlayer = 0;
 bool resetPlayer = false;
-int scrollPos=-10;
+int scrollPos=0;
 
 /*
 static const uint8_t icons[8][20] = { { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 1, 1, 1, 1, 1, 1, 8, 1 },		// mario
@@ -66,6 +67,14 @@ void initGame(int game){
 void play(){
 	char select;
 	switch (state) {
+    case GAME_BATTERY:
+      checkAndShow();
+      scrollPos++;
+      if (scrollPos>30){
+        scrollPos=-10;
+        state=GAME_STARTUP;
+      }
+      break;
 		case GAME_STARTUP:
 /*			select = getNumberClick();
 			if (select >= 0) {
@@ -83,6 +92,10 @@ void play(){
         showScroller("Spasskonsole  ", scrollPos/2, true, true, CRGB::Black);
         scrollPos++;
         if (scrollPos>206) state=GAME_RUNNING;
+
+
+
+        
 			break;
 		case GAME_PLAYER_SELECTION:
 /*			clear(0);
