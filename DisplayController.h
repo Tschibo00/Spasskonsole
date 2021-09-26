@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+#define EFFECT_NONE 0
+#define EFFECT_RAINBOW 1
+#define EFFECT_FADE 2
+
 #define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 //FASTLED_USING_NAMESPACE
@@ -13,7 +17,7 @@
 void initDisplayController();
 void displayShow();
 void clear(CRGB color);
-void copy(const CRGB *source);
+void copy(const uint8_t *source);
 /*void copy(const char *source);
 void showDigit(char row, char number);
 void showNumber(int number);*/
@@ -22,10 +26,12 @@ void showNumber37(int8_t num);
 
 void showScroller(const char *text, int scrollPos, bool smooth, CRGB color);
 void showScrollerRainbow(const char *text, int scrollPos, bool smooth);
+void showScroller(const char *text, int scrollPos, bool smooth, uint8_t effect, CRGB color1,CRGB color2);
 void showScroller(const char *text, int scrollPos, bool smooth, bool rainbow, CRGB color);
 
 void showCharacter(unsigned char c);
 void showCharacter(unsigned char c, int8_t xOffset, CRGB color);
+void showCharacter(unsigned char c, int8_t xOffset, CRGB colorTop,CRGB colorBottom);
 void showCharacterRainbow(unsigned char c, int8_t xOffset);
 void showCharacter(unsigned char c, int8_t xOffset, int rainbow, CRGB color);
 
@@ -42,5 +48,9 @@ CRGB get(int x, int y);
 void strike();
 char* getPalette();
 uint8_t* getScreen();*/
+
+void nblendU8TowardU8( uint8_t& cur, const uint8_t target, uint8_t amount);
+CRGB fadeTowardColor( CRGB& cur, const CRGB& target, uint8_t amount);
+
 
 #endif

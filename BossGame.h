@@ -22,6 +22,9 @@ class BossGame: public Game {
 	public:
 		BossGame();
 		void play() override;
+    bool needsPlayerSelection() override{
+      return true;
+    }
 };
 
 #endif

@@ -15,7 +15,7 @@
 #define GAME_RUNNING 3
 
 void initGameController();
-void selectGame(int game);
 void play();
+void showPlayerName(uint8_t player);
 
 #endif

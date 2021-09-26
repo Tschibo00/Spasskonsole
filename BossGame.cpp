@@ -16,10 +16,6 @@ void BossGame::play(){
 	move();
 	moveBoss();
 
-  // player
-  set(x,y,CRGB::White);
-  set(x,y+1,CRGB::Blue);
-
   if (isBoss){
     set(xB,yB,CRGB::Red);
     set(xB+1,yB,CRGB::Grey);
@@ -35,6 +31,10 @@ void BossGame::play(){
     set(xB,yB+1,CRGB::Green);
     set(xB+1,yB+1,CRGB::Purple);
   }
+
+  // player
+  set(x,y,CRGB::White);
+  set(x,y+1,CRGB::Blue);
 }
 
 void BossGame::initLevel(){
@@ -46,16 +46,20 @@ void BossGame::move(){
  
 	switch (getNumberClick()) {
     case 15:
-      if (y>0) y--;
+      y--;
+      if (y<-1) y=7;
       break;
     case 17:
-      if (y<6) y++;
+      y++;
+      if (y>7) y=-1;
       break;
     case 18:
-      if (x>0) x--;
+      x--;
+      if (x<0) x=7;
       break;
     case 19:
-      if (x<7) x++;
+      x++;
+      if (x>7) x=0;
       break;
 	}
 }
@@ -76,8 +80,8 @@ void BossGame::initBoss(){
   }else
     isBoss=false;
   isLeaving=false;
- // if (isBoss)
-   // playSound(0.9f);
+  if (isBoss)
+    playSound(1.5f);
 }
 
 void BossGame::moveBoss(){

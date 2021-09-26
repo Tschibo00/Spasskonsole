@@ -36,9 +36,9 @@ void clear(CRGB color){
 		leds[i] = color;
 }
 
-void copy(const CRGB *source){
+void copy(const uint8_t *source){
   for (uint8_t i = 0; i < 64; i++)
-    leds[i]=source[i];
+    leds[i]=getFullColor(source[i]);
 }
 
 void showScroller(const char *text, int scrollPos, bool smooth, CRGB color){
@@ -48,19 +48,38 @@ void showScrollerRainbow(const char *text, int scrollPos, bool smooth){
   showScroller(text,scrollPos,smooth,true,CRGB::Black);
 }
 
-void showScroller(const char *text, int scrollPos, bool smooth, bool rainbow, CRGB color){
+void showScroller(const char *text, int scrollPos, bool smooth, uint8_t effect, CRGB color1,CRGB color2){
 	int textOffset = scrollPos / 8;
 	int charOffset = smooth ? 7 - (scrollPos % 8) : (scrollPos % 8 == 7 ? -15 : 7);// values -15 and 7 are not really confirmed
 	clear(CRGB::Black);
-	showCharacter(text[textOffset], charOffset - 7, (scrollPos*8)&255, color);
-	showCharacter(text[textOffset + 1], charOffset + 1, (scrollPos*8)&255, color);
+  switch(effect){
+    case 0:
+      showCharacter(text[textOffset], charOffset - 7, color1);
+      showCharacter(text[textOffset + 1], charOffset + 1, color1);
+      break;
+    case 1:
+      showCharacter(text[textOffset], charOffset - 7, (scrollPos*16)&255, color1);
+      showCharacter(text[textOffset + 1], charOffset + 1, (scrollPos*16)&255, color1);
+      break;
+    case 2:
+      showCharacter(text[textOffset], charOffset - 7, color1,color2);
+      showCharacter(text[textOffset + 1], charOffset + 1, color1,color2);
+      break;
+  }
+}
+
+void showScroller(const char *text, int scrollPos, bool smooth, bool rainbow, CRGB color){
+  if (rainbow)
+    showScroller(text,scrollPos,smooth,EFFECT_RAINBOW,color,color);
+  else
+    showScroller(text,scrollPos,smooth,EFFECT_NONE,color,color);
 }
 
 void showCharacter(unsigned char c, int8_t xOffset, CRGB color){
-  showCharacter(c,xOffset,false,color);
+  showCharacter(c,xOffset,-1,color);
 }
 
-void showCharacterRainbow(unsigned char c, int8_t xOffset){
+void showCharacterRainbow(unsigned char c, int8_t xOffset){// TODO wrong implementation for rainbow
   showCharacter(c,xOffset,true,CRGB::Black);
 }
 
@@ -81,6 +100,25 @@ void showCharacter(unsigned char c, int8_t xOffset, int rainbow, CRGB color){
 			b = b >> 1;
 		}
 	}
+}
+
+void showCharacter(unsigned char c, int8_t xOffset, CRGB colorTop,CRGB colorBottom){
+  uint8_t b;
+  int8_t x, y;
+  unsigned char cc = 0;
+  CRGB color;
+
+  if ((c >= 32) && (c <= 127)) cc = c - 32;
+  if ((c >= 0) && (c <= 31)) cc = c +96;
+
+  for (y = 0; y < 8; y++) {
+    b = font[cc * 8 + y];
+    for (x = 7; x >= 0; x--) {
+      color=fadeTowardColor(colorTop,colorBottom,y*9);
+      set(x + xOffset, y, b&1?color:CRGB::Black);
+      b = b >> 1;
+    }
+  }
 }
 
 void showCharacter(unsigned char c){
@@ -244,4 +282,31 @@ void showNumber37(int8_t num){
   if (n>99) n=99;
   showDigit37(n/10, neg?CRGB::Red:CRGB::Green, 0);
   showDigit37(n%10, neg?CRGB::Red:CRGB::Green, 4);
+}
+
+// Helper function that blends one uint8_t toward another by a given amount
+void nblendU8TowardU8( uint8_t& cur, const uint8_t target, uint8_t amount)
+{
+  if( cur == target) return;
+  
+  if( cur < target ) {
+    uint8_t delta = target - cur;
+    delta = scale8_video( delta, amount);
+    cur += delta;
+  } else {
+    uint8_t delta = cur - target;
+    delta = scale8_video( delta, amount);
+    cur -= delta;
+  }
+}
+
+// Blend one CRGB color toward another CRGB color by a given amount.
+// Blending is linear, and done in the RGB color space.
+// This function modifies 'cur' in place.
+CRGB fadeTowardColor( CRGB& cur, const CRGB& target, uint8_t amount)
+{
+  nblendU8TowardU8( cur.red,   target.red,   amount);
+  nblendU8TowardU8( cur.green, target.green, amount);
+  nblendU8TowardU8( cur.blue,  target.blue,  amount);
+  return cur;
 }

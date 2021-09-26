@@ -1,11 +1,13 @@
 #include "SoundController.h"
 
-#include "SoundData.h"
+#include "zombie.h"
+#include "gameover.h"
 
 #define OUTPIN 25
 #define PWM_CHANNEL 1
 
-XT_Wav_Class ForceWithYou(Force);
+XT_Wav_Class Zombie(zombie2_wav);
+XT_Wav_Class GameOver(gameover2_wav);
 XT_DAC_Audio_Class DacAudio(OUTPIN,0);
 
 void initSoundController(){
@@ -16,6 +18,6 @@ void processSound(){
 }
 
 void playSound(float speed){
-  ForceWithYou.Speed=speed;
-  DacAudio.Play(&ForceWithYou);
+  Zombie.Speed=speed;
+  DacAudio.Play(&Zombie);
 }
