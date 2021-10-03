@@ -43,6 +43,7 @@ void drawRectangle(int x, int y, int width, int height, char color);
 void drawBox(int x, int y, int width, int height, char color);
 void drawFade(char c0, char c1, char c2, char c3, char c4);*/
 void set(int x, int y, CRGB color);
+bool setTest(int x, int y, CRGB color);
 CRGB get(int x, int y);
 /*void fade(char steps);
 void strike();

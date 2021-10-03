@@ -4,42 +4,76 @@ uint8_t screen[64];
 
 BossGame::BossGame(){
 	initLevel();
-
-  for (uint8_t y=0;y<8;y++)
-    for (uint8_t x=0;x<8;x++)
-      screen[y*8+x]=(y<<2)|(x<<5);
 }
 
 void BossGame::play(){
+  if (getKeyClick(KEY_1)){
+    if (showingScore<0){
+      if (survived<10) showingScore=64;
+      if (survived>=10) showingScore=48;
+      if (survived>=100) showingScore=32;
+      if (survived>=1000) showingScore=16;
+      if (survived>=10000) showingScore=0;
+    }else
+      showingScore=-1;
+  }
 	clear(CRGB::Black);
 
-	move();
-	moveBoss();
-
-  if (isBoss){
-    set(xB,yB,CRGB::Red);
-    set(xB+1,yB,CRGB::Grey);
-    set(xB+2,yB,CRGB::Red);
-    set(xB,yB+1,CRGB::Blue);
-    set(xB+1,yB+1,CRGB::Blue);
-    set(xB+2,yB+1,CRGB::Blue);
-    set(xB,yB+2,CRGB::White);
-    set(xB+2,yB+2,CRGB::White);
+  if (showingScore>=0){
+    setNumber(survived);
+    showScroller(score,(showingScore-15)/2,true,CRGB::White);
+    showingScore=(showingScore+1)%96;
   }else{
-    set(xB,yB,CRGB::Red);
-    set(xB+1,yB,CRGB::Orange);
-    set(xB,yB+1,CRGB::Green);
-    set(xB+1,yB+1,CRGB::Purple);
+  	move();
+  	moveBoss();
+  
+    if (isBoss){
+      set(xB,yB,CRGB::Red);
+      set(xB+1,yB,CRGB::Grey);
+      set(xB+2,yB,CRGB::Red);
+      set(xB,yB+1,CRGB::Blue);
+      set(xB+1,yB+1,CRGB::Blue);
+      set(xB+2,yB+1,CRGB::Blue);
+      set(xB,yB+2,CRGB::White);
+      set(xB+2,yB+2,CRGB::White);
+    }else{
+      set(xB,yB,CRGB::Red);
+      set(xB+1,yB,CRGB::Orange);
+      set(xB,yB+1,CRGB::Green);
+      set(xB+1,yB+1,CRGB::Purple);
+    }
+  
+    // player
+    bool hitBoss=false;
+    if (safety%2==0){
+      hitBoss|=setTest(x,y,CRGB::White);
+      hitBoss|=setTest(x,y+1,CRGB::Blue);
+    }
+    if (safety>0){
+      safety--;
+      hitBoss=false;
+    }
+    if (hitBoss){
+      if (survived==0){
+        initLevel();
+        playGameOver();
+      }else{
+        safety=25;
+        survived=0;
+        playLost();
+      }
+    }
   }
-
-  // player
-  set(x,y,CRGB::White);
-  set(x,y+1,CRGB::Blue);
 }
 
 void BossGame::initLevel(){
   x=y=4;
+  safety=0;
+  bossSpeed=7;
+  bossCounter=7;
+  showingScore=-1;
   initBoss();
+  survived=0;
 }
 
 void BossGame::move(){
@@ -82,6 +116,7 @@ void BossGame::initBoss(){
   isLeaving=false;
   if (isBoss)
     playSound(1.5f);
+  survived++;
 }
 
 void BossGame::moveBoss(){

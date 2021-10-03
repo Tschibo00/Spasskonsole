@@ -164,6 +164,15 @@ void set(int x, int y, CRGB color){
 	if (x >= 0 && x < 8 && y >= 0 && y < 8) leds[y * 8 + x] = color;
 }
 
+bool setTest(int x, int y, CRGB color){
+  bool hit=false;
+  if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+    if (leds[y * 8 + x]!=CRGB(0,0,0)) hit=true;
+    leds[y * 8 + x] = color;
+  }
+  return hit;
+}
+
 CRGB get(int x, int y){
 	if (x >= 0 && x < 8 && y >= 0 && y < 8)
 		return leds[y * 8 + x];

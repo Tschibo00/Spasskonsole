@@ -7,5 +7,7 @@
 void initSoundController();
 void processSound();
 void playSound(float speed);
+void playGameOver();
+void playLost();
 
 #endif
