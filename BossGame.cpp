@@ -1,7 +1,5 @@
 #include "BossGame.h"
 
-uint8_t screen[64];
-
 BossGame::BossGame(){
 	initLevel();
 }
@@ -79,19 +77,19 @@ void BossGame::initLevel(){
 void BossGame::move(){
  
 	switch (getNumberClick()) {
-    case 15:
+    case KEY_UP:
       y--;
       if (y<-1) y=7;
       break;
-    case 17:
+    case KEY_DOWN:
       y++;
       if (y>7) y=-1;
       break;
-    case 18:
+    case KEY_LEFT:
       x--;
       if (x<0) x=7;
       break;
-    case 19:
+    case KEY_RIGHT:
       x++;
       if (x>7) x=0;
       break;

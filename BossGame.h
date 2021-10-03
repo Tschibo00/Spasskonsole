@@ -17,6 +17,7 @@ class BossGame: public Game {
     int8_t safety;
     int16_t showingScore;
     char score[6];
+    uint8_t screen[64];
 
 		void initLevel();
 		void move();
@@ -45,7 +46,7 @@ class BossGame: public Game {
 		BossGame();
 		void play() override;
     bool needsPlayerSelection() override{
-      return true;
+      return false;
     }
 };
 

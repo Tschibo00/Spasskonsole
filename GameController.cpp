@@ -1,7 +1,7 @@
 #include "GameController.h"
 #include "BatteryMonitor.h"
 
-#define GAME_COUNT 1
+#define GAME_COUNT 2
 #define SKIP_LOGO
 
 Game *runningGame = NULL;
@@ -11,26 +11,9 @@ char selectedPlayer = 0;
 bool resetPlayer = false;
 int scrollPos=0;
 
-/*
- *       set(xB,yB,CRGB::Red);
-      set(xB+1,yB,CRGB::Grey);
-      set(xB+2,yB,CRGB::Red);
-      set(xB,yB+1,CRGB::Blue);
-      set(xB+1,yB+1,CRGB::Blue);
-      set(xB+2,yB+1,CRGB::Blue);
-      set(xB,yB+2,CRGB::White);
-      set(xB+2,yB+2,CRGB::White);
-
-    // player
-    bool hitBoss=false;
-    if (safety%2==0){
-      hitBoss|=setTest(x,y,CRGB::White);
-      hitBoss|=setTest(x,y+1,CRGB::Blue);
-
- */
-static const uint8_t icons[1][64] = {
-  {0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0,0,    0,0,255,0,0,0,0,0,    0,0,3,0,0,0,0,0,    0,0,0,0,224,146,224,0,   0,0,0,0,3,3,3,0,    0,0,0,0,255,0,255,0,  0,0,0,0,0,0,0,0}
-//  { 3,7,10,14,17,21,24,28,  35,39,42,46,49,53,56,60,  66,70,73,77,80,84,88,92,  98,102,105,109,112,116,120,124,  129,133,136,140,144,148,152,156,  161,165,168,172,176,180,184,188,  192,196,200,204,208,212,216,220,  224,228,232,236,240,244,248,252 }		// BossGame
+static const uint8_t icons[GAME_COUNT][64] = {
+  {0,0,0,0,0,0,0,0,   0,0,0,0,0,0,0,0,    0,0,255,0,0,0,0,0,    0,0,3,0,0,0,0,0,    0,0,0,0,224,146,224,0,   0,0,0,0,3,3,3,0,    0,0,0,0,255,0,255,0,  0,0,0,0,0,0,0,0},
+  {3,3,252,224,224,252,3,252,   3,252,252,224,3,224,252,224,    252,252,0,0,3,0,252,224,    64,224,0,224,3,252,252,0,    0,64,252,252,3,224,0,224,  0,0,64,0,252,0,224,0,    0,0,0,64,0,0,0,0,    146,0,0,0,224,0,0,0}
 };
 
 void initGameController(){
@@ -41,6 +24,9 @@ void initGame(int game){
 		case 0:
 			runningGame = new BossGame();
 			break;
+    case 1:
+      runningGame = new BobbleGame();
+      break;
 	}
 	if (runningGame->needsPlayerSelection())
 		state = GAME_PLAYER_SELECTION;
