@@ -2,7 +2,7 @@
 #include "BatteryMonitor.h"
 
 #define GAME_COUNT 2
-#define SKIP_LOGO
+//#define SKIP_LOGO
 
 Game *runningGame = NULL;
 char state = GAME_BATTERY;
@@ -46,32 +46,32 @@ void play(){
       }
       break;
 		case GAME_STARTUP:
-			select = getNumberClick();
-      switch(select){
-        case KEY_LEFT:
-          currentGame--;
-          if (currentGame<0) currentGame=GAME_COUNT-1;
-          break;
-        case KEY_RIGHT:
-          currentGame++;
-          if (currentGame>=GAME_COUNT) currentGame=0;
-          break;
-        case KEY_OK:
-          initGame(currentGame);
-          break;
-      }
 
-			if (currentGame >= 0)
+			if (currentGame >= 0){
+        select = getNumberClick();
+        switch(select){
+          case KEY_LEFT:
+            currentGame--;
+            if (currentGame<0) currentGame=GAME_COUNT-1;
+            break;
+          case KEY_RIGHT:
+            currentGame++;
+            if (currentGame>=GAME_COUNT) currentGame=0;
+            break;
+          case KEY_OK:
+            initGame(currentGame);
+            break;
+        }
 				copy(icons[currentGame]);
-			else{
+			}else{
         #ifdef SKIP_LOGO
-        scrollPos=207;
+        scrollPos=200;
         #endif
-        if (getKeyStatus(KEY_OK))
-          scrollPos=207;
+        if (getKeyClick(KEY_OK))
+          scrollPos=200;
         showScroller("Spasskonsole  ", scrollPos/2, true, true, CRGB::Black);
         scrollPos++;
-        if (scrollPos>206) currentGame=0;
+        if (scrollPos>=200) currentGame=0;
 			}
 			break;
 		case GAME_PLAYER_SELECTION:
