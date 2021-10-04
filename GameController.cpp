@@ -40,7 +40,7 @@ void play(){
     case GAME_BATTERY:
       checkAndShow();
       scrollPos++;
-      if (scrollPos>30){
+      if ((scrollPos>30)||getKeyClick(KEY_OK)){
         scrollPos=-10;
         state=GAME_STARTUP;
       }

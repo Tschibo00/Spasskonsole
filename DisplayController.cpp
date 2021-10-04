@@ -124,6 +124,20 @@ void showCharacter(unsigned char c, int8_t xOffset, CRGB colorTop,CRGB colorBott
 void showCharacter(unsigned char c){
 	showCharacter(c, 0, CRGB::White);
 }
+
+void drawLine(int8_t x0,int8_t y0,int8_t x1,int8_t y1,CRGB color){
+  drawLine(x0,y0,(x1-x0)*128,(y1-y0)*128,10,color);//TODO 10 is just guessing
+}
+
+void drawLine(int x, int y, int dx, int dy, int steps, CRGB color){
+  x=x*256;
+  y=y*256;
+  for (int i = 0; i < steps; i++) {
+    set(x/256, y/256, color);
+    x += dx;
+    y += dy;
+  }
+}
 /*
 void drawLine(int x, int y, int dx, int dy, int steps, char color){
 	drawDottedLine(x, y, dx, dy, steps, color, color);
