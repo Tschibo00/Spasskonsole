@@ -8,13 +8,30 @@ BobbleGame::BobbleGame(){
 void BobbleGame::play(){
   clear(CRGB::Black);
 
-  move();
+/*  move();
 
   for (uint16_t i=yPos*8;i<height*8;i++)
     drawBobble(i%8,i/8-yPos,screen[i]);
 
   drawBobble(4,7,bobbles[0]);
-//  drawLine(4,7,4+angle,-20,bobbles[0]);
+//  drawLine(4,7,4+angle,-20,bobbles[0]);*/
+
+
+
+  switch(getNumberClick()){
+    case KEY_2:y0--;break;
+    case KEY_4:x0--;break;
+    case KEY_6:x0++;break;
+    case KEY_8:y0++;break;
+    case KEY_UP:y1--;break;
+    case KEY_LEFT:x1--;break;
+    case KEY_RIGHT:x1++;break;
+    case KEY_DOWN:y1++;break;
+  }
+
+  drawLine(x0,y0,x1,y1,CRGB::White);
+
+
 }
 
 void BobbleGame::drawBobble(uint8_t x,uint8_t y,uint8_t bobble){

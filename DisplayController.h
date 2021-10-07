@@ -38,7 +38,7 @@ void showCharacter(unsigned char c, int8_t xOffset, int rainbow, CRGB color);
 CRGB getFullColor(uint8_t c);
 
 void drawLine(int8_t x0,int8_t y0,int8_t x1,int8_t y1,CRGB color);
-void drawLine(int x, int y, int dx, int dy, int steps, CRGB color);
+void drawLine(int x, int y, int dx, int dy, uint8_t steps, CRGB color);
 
 /*void drawLine(int x, int y, int dx, int dy, int steps, char color);
 void drawDottedLine(int x, int y, int dx, int dy, int steps, char color1, char color2);

@@ -126,14 +126,34 @@ void showCharacter(unsigned char c){
 }
 
 void drawLine(int8_t x0,int8_t y0,int8_t x1,int8_t y1,CRGB color){
-  drawLine(x0,y0,(x1-x0)*128,(y1-y0)*128,10,color);//TODO 10 is just guessing
+  uint8_t steps;
+  if (abs(y1-y0)>abs(x1-x0))
+    steps=abs(y1-y0);
+  else
+    steps=abs(x1-x0);
+
+Serial.print(steps);Serial.print(":  ");
+Serial.print(x0);Serial.print(" ");
+Serial.print(y0);Serial.print(" ");
+Serial.print(x1);Serial.print(" ");
+Serial.print(y1);Serial.print("    ");
+
+
+  if (steps==0)
+    drawLine(x0,y0,0,0,0,color);
+  else
+    drawLine(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,color);
 }
 
-void drawLine(int x, int y, int dx, int dy, int steps, CRGB color){
-  x=x*256;
-  y=y*256;
-  for (int i = 0; i < steps; i++) {
-    set(x/256, y/256, color);
+void drawLine(int x, int y, int dx, int dy, uint8_t steps, CRGB color){
+
+Serial.print(dx);Serial.print(" ");
+Serial.println(dy);
+  
+  x=x*256+128;
+  y=y*256+128;
+  for (uint8_t i = 0; i <= steps; i++) {
+    set(x>>8, y>>8, color);
     x += dx;
     y += dy;
   }

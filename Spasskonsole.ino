@@ -53,6 +53,8 @@ void IRAM_ATTR onGameloop() {
 }
 
 void setup() {
+Serial.begin(115200);
+  
   WiFi.mode(WIFI_STA);
   WiFi.begin("TSQ", "ficken9000!#");
   while (WiFi.waitForConnectResult() != WL_CONNECTED)

@@ -34,6 +34,8 @@ class BobbleGame: public Game {
     uint8_t colorMod;
     uint8_t yPos;
 
+    int8_t x0,y0,x1,y1;
+
     uint8_t screen[8*40];
     int level;
   
