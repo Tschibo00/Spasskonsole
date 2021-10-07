@@ -29,6 +29,8 @@ class BobbleGame: public Game {
     uint8_t bobbles[3];
     uint8_t numberBobbles=2;
     int8_t angle;
+    uint8_t colDiv=4;
+    int8_t flying=-1;
 
     uint8_t height;
     uint8_t colorMod;

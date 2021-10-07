@@ -8,30 +8,24 @@ BobbleGame::BobbleGame(){
 void BobbleGame::play(){
   clear(CRGB::Black);
 
-/*  move();
+  move();
 
   for (uint16_t i=yPos*8;i<height*8;i++)
     drawBobble(i%8,i/8-yPos,screen[i]);
-
-  drawBobble(4,7,bobbles[0]);
-//  drawLine(4,7,4+angle,-20,bobbles[0]);*/
-
-
-
-  switch(getNumberClick()){
-    case KEY_2:y0--;break;
-    case KEY_4:x0--;break;
-    case KEY_6:x0++;break;
-    case KEY_8:y0++;break;
-    case KEY_UP:y1--;break;
-    case KEY_LEFT:x1--;break;
-    case KEY_RIGHT:x1++;break;
-    case KEY_DOWN:y1++;break;
+Serial.println(flying);
+  if (flying<0){
+    Point hit=drawLineTest(4,7,4+angle,-20,bobbleColor(bobbles[0])/16);
+    set(hit.x,hit.y,bobbleColor(bobbles[0])/colDiv);
+    colDiv^=32;
+  }else{
+    if (drawLineTest(4,7,4+angle,-20,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16)){
+      // set bobble fixed to screen
+      flying=-1;
+    }else{
+      flying++;
+    }
   }
-
-  drawLine(x0,y0,x1,y1,CRGB::White);
-
-
+  drawBobble(4,7,bobbles[0]);
 }
 
 void BobbleGame::drawBobble(uint8_t x,uint8_t y,uint8_t bobble){
@@ -95,6 +89,7 @@ void BobbleGame::rotateBobble(bool up){
 }
 
 void BobbleGame::shoot(){
+  flying=0;
   bobbles[0]=bobbles[1];
   initBobble(1);
 }
@@ -114,6 +109,6 @@ void BobbleGame::move(){
     case KEY_OK:shoot();break;
   }
 
-  if (getKeyStatus(KEY_LEFT))angle--;
-  if (getKeyStatus(KEY_RIGHT))angle++;
+  if (getKeyStatus(KEY_LEFT)&&(angle>-40))angle--;
+  if (getKeyStatus(KEY_RIGHT)&&(angle<40))angle++;
 }

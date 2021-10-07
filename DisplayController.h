@@ -14,6 +14,10 @@
 #warning "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
+struct Point{
+  int x,y;
+};
+
 void initDisplayController();
 void displayShow();
 void clear(CRGB color);
@@ -37,8 +41,13 @@ void showCharacter(unsigned char c, int8_t xOffset, int rainbow, CRGB color);
 
 CRGB getFullColor(uint8_t c);
 
-void drawLine(int8_t x0,int8_t y0,int8_t x1,int8_t y1,CRGB color);
-void drawLine(int x, int y, int dx, int dy, uint8_t steps, CRGB color);
+void drawLine(Point p0,Point p1,CRGB color);
+void drawLine(Point p,Point d, uint8_t steps, CRGB color);
+Point drawLineTest(Point p0,Point p1,uint8_t steps,CRGB color);
+Point drawLineTest(int x0,int y0,int x1,int y1, CRGB color);
+Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, CRGB color);
+bool drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color);
+bool drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color);
 
 /*void drawLine(int x, int y, int dx, int dy, int steps, char color);
 void drawDottedLine(int x, int y, int dx, int dy, int steps, char color1, char color2);
@@ -47,7 +56,10 @@ void drawBox(int x, int y, int width, int height, char color);
 void drawFade(char c0, char c1, char c2, char c3, char c4);*/
 void set(int x, int y, CRGB color);
 bool setTest(int x, int y, CRGB color);
+void set(Point p,CRGB color);
+bool setTest(Point p,CRGB color);
 CRGB get(int x, int y);
+CRGB get(Point p);
 /*void fade(char steps);
 void strike();
 char* getPalette();

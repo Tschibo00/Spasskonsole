@@ -125,39 +125,96 @@ void showCharacter(unsigned char c){
 	showCharacter(c, 0, CRGB::White);
 }
 
-void drawLine(int8_t x0,int8_t y0,int8_t x1,int8_t y1,CRGB color){
+void drawLine(Point p0,Point p1,CRGB color){
+  uint8_t steps;
+  if (abs(p1.y-p0.y)>abs(p1.x-p0.x))
+    steps=abs(p1.y-p0.y);
+  else
+    steps=abs(p1.x-p0.x);
+
+  if (steps==0)
+    drawLine(p0,p0,0,color);
+  else{
+    p1.x=(p1.x-p0.x)*256/steps;
+    p1.y=(p1.y-p0.y)*256/steps;
+    drawLine(p0,p1,steps,color);
+  }
+}
+
+void drawLine(Point p,Point d, uint8_t steps, CRGB color){
+  p.x=p.x*256+128;
+  p.y=p.y*256+128;
+  for (uint8_t i = 0; i <= steps; i++) {
+    set(p.x>>8, p.y>>8, color);
+    p.x += d.x;
+    p.y += d.y;
+  }
+}
+
+Point drawLineTest(int x0,int y0,int x1,int y1, CRGB color){
   uint8_t steps;
   if (abs(y1-y0)>abs(x1-x0))
     steps=abs(y1-y0);
   else
     steps=abs(x1-x0);
 
-Serial.print(steps);Serial.print(":  ");
-Serial.print(x0);Serial.print(" ");
-Serial.print(y0);Serial.print(" ");
-Serial.print(x1);Serial.print(" ");
-Serial.print(y1);Serial.print("    ");
-
-
   if (steps==0)
-    drawLine(x0,y0,0,0,0,color);
+    return drawLineTest(x0,y0,0,0,0,color);
   else
-    drawLine(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,color);
+    return drawLineTest(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,color);
 }
 
-void drawLine(int x, int y, int dx, int dy, uint8_t steps, CRGB color){
-
-Serial.print(dx);Serial.print(" ");
-Serial.println(dy);
+Point drawLineTest(int x0,int y0,int dx,int dy, uint8_t steps, CRGB color){
+  Point hit;
+  hit.x=-1;
+  hit.y=-1;
   
-  x=x*256+128;
-  y=y*256+128;
+  x0=x0*256+128;
+  y0=y0*256+128;
   for (uint8_t i = 0; i <= steps; i++) {
-    set(x>>8, y>>8, color);
-    x += dx;
-    y += dy;
+    if (get(x0>>8,y0>>8)!=CRGB(0,0,0)) return hit;
+    set(x0>>8, y0>>8, color);
+    hit.x=x0>>8;
+    hit.y=y0>>8;
+    x0+=dx;
+    y0+=dy;
+    if ((x0<256)||(x0>1792))dx=-dx;
   }
 }
+
+Point drawLineTest(Point p0,Point p1,uint8_t steps,CRGB color){
+  return drawLineTest(p0.x,p0.y,p1.x,p1.y,steps,color);
+}
+
+bool drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color){
+  uint8_t steps;
+  if (abs(y1-y0)>abs(x1-x0))
+    steps=abs(y1-y0);
+  else
+    steps=abs(x1-x0);
+
+  if (steps==0)
+    return drawLineTest(x0,y0,0,0,0,index,bobble,color);
+  else
+    return drawLineTest(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,index,bobble,color);
+}
+
+bool drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color){
+  x=x*256+128;
+  y=y*256+128;
+  for (uint8_t i = index; i <= steps; i++) {
+    if (get(x>>8,y>>8)!=CRGB(0,0,0)) return true;
+    if (i==index)
+      set(x>>8, y>>8, bobble);
+    else
+      set(x>>8, y>>8, color);
+    x+=dx;
+    y+=dy;
+    if ((x<256)||(x>1792))dx=-dx;
+  }
+  return false;
+}
+
 /*
 void drawLine(int x, int y, int dx, int dy, int steps, char color){
 	drawDottedLine(x, y, dx, dy, steps, color, color);
@@ -206,12 +263,21 @@ bool setTest(int x, int y, CRGB color){
   }
   return hit;
 }
+void set(Point p,CRGB color){
+  set(p.x,p.y,color);
+}
+bool setTest(Point p,CRGB color){
+  return setTest(p.x,p.y,color);
+}
 
 CRGB get(int x, int y){
 	if (x >= 0 && x < 8 && y >= 0 && y < 8)
 		return leds[y * 8 + x];
 	else
 		return CRGB::Black;
+}
+CRGB get(Point p){
+  return get(p.x,p.y);
 }
 /*
 void fade(char steps){
