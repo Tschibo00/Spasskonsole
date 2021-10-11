@@ -18,9 +18,14 @@ Serial.println(flying);
     set(hit.x,hit.y,bobbleColor(bobbles[0])/colDiv);
     colDiv^=32;
   }else{
-    if (drawLineTest(4,7,4+angle,-20,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16)){
-      // set bobble fixed to screen
+    Point hit=drawLineTest(4,7,4+angle,-20,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16);
+    Serial.print(hit.x);Serial.print("   ");Serial.println(hit.y);
+    if (hit.x>0){
+    
+      screen[hit.x+(hit.y+height-6)*8]=bobbles[0];
       flying=-1;
+      bobbles[0]=bobbles[1];
+      initBobble(1);
     }else{
       flying++;
     }
@@ -56,6 +61,14 @@ void BobbleGame::initLevel(){
     screen[i]=c|m;
   }
 
+  //TODO REVERT
+  for(uint8_t i=0;i<height;i++){
+    screen[i*8]=CRGB::Black;
+    screen[i*8+1]=CRGB::Black;
+    screen[i*8+2]=CRGB::Black;
+    screen[i*8+3]=CRGB::Black;
+  }
+
   initBobble(0);
   initBobble(1);
 
@@ -89,9 +102,7 @@ void BobbleGame::rotateBobble(bool up){
 }
 
 void BobbleGame::shoot(){
-  flying=0;
-  bobbles[0]=bobbles[1];
-  initBobble(1);
+  flying=1;
 }
 
 void BobbleGame::initBobble(uint8_t i){

@@ -39,6 +39,7 @@ class BobbleGame: public Game {
     int8_t x0,y0,x1,y1;
 
     uint8_t screen[8*40];
+    bool going[8*40];
     int level;
   
     void initLevel();

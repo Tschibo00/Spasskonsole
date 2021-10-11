@@ -186,7 +186,7 @@ Point drawLineTest(Point p0,Point p1,uint8_t steps,CRGB color){
   return drawLineTest(p0.x,p0.y,p1.x,p1.y,steps,color);
 }
 
-bool drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color){
+Point drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color){
   uint8_t steps;
   if (abs(y1-y0)>abs(x1-x0))
     steps=abs(y1-y0);
@@ -199,20 +199,26 @@ bool drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB col
     return drawLineTest(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,index,bobble,color);
 }
 
-bool drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color){
+Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color){
+  Point hit;
+  hit.x=-1;
+  hit.y=-1;
+  
   x=x*256+128;
   y=y*256+128;
-  for (uint8_t i = index; i <= steps; i++) {
-    if (get(x>>8,y>>8)!=CRGB(0,0,0)) return true;
-    if (i==index)
+  for (uint8_t i = 0; i <= steps; i++) {
+    if (i==index){
+      if (get(x>>8,y>>8)!=CRGB(0,0,0))return hit;
       set(x>>8, y>>8, bobble);
-    else
-      set(x>>8, y>>8, color);
+    }
+    hit.x=x>>8;
+    hit.y=y>>8;
     x+=dx;
     y+=dy;
     if ((x<256)||(x>1792))dx=-dx;
   }
-  return false;
+  hit.x=hit.y=-1;
+  return hit;
 }
 
 /*

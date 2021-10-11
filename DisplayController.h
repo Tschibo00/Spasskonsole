@@ -46,8 +46,8 @@ void drawLine(Point p,Point d, uint8_t steps, CRGB color);
 Point drawLineTest(Point p0,Point p1,uint8_t steps,CRGB color);
 Point drawLineTest(int x0,int y0,int x1,int y1, CRGB color);
 Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, CRGB color);
-bool drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color);
-bool drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color);
+Point drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color);
+Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color);
 
 /*void drawLine(int x, int y, int dx, int dy, int steps, char color);
 void drawDottedLine(int x, int y, int dx, int dy, int steps, char color1, char color2);
