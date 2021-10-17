@@ -10,18 +10,15 @@ void BobbleGame::play(){
 
   move();
 
-  for (uint16_t i=yPos*8;i<height*8;i++)
-    drawBobble(i%8,i/8-yPos,screen[i]);
-Serial.println(flying);
+  drawScreen();
   if (flying<0){
     Point hit=drawLineTest(4,7,4+angle,-20,bobbleColor(bobbles[0])/16);
     set(hit.x,hit.y,bobbleColor(bobbles[0])/colDiv);
+
     colDiv^=32;
   }else{
     Point hit=drawLineTest(4,7,4+angle,-20,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16);
-    Serial.print(hit.x);Serial.print("   ");Serial.println(hit.y);
     if (hit.x>0){
-    
       screen[hit.x+(hit.y+height-6)*8]=bobbles[0];
       flying=-1;
       bobbles[0]=bobbles[1];
@@ -35,6 +32,39 @@ Serial.println(flying);
 
 void BobbleGame::drawBobble(uint8_t x,uint8_t y,uint8_t bobble){
   set(x,y,bobbleColor(bobble));
+}
+
+void BobbleGame::drawScreen(){
+  for (uint16_t i=0;i<8*6;i++)
+    drawBobble(i%8,i/8,screen[i+yPos*8]);
+}
+
+uint16_t BobbleGame::getConnected(int8_t x,int16_t y,uint8_t bobble){
+  for (uint16_t i=0;i<8*40;i++) going[i]=false;
+  return getConnectedBobbles(x,y,bobble,0);
+}
+
+uint16_t BobbleGame::getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion){
+  // TODO break on special bobbles
+  uint16_t sum=0;
+  if (recursion>100)return 0;
+
+  going[x+y*8]=true;
+
+  for (int16_t dy=-1;dy<=1;dy++)
+    for (int8_t dx=-1;dx<=1;dx++)
+      if ((dx!=0)||(dy!=0))
+        if ((x+dx>=0)&&(x+dx<8)&&(y+dy>=0)&&(y+dy<height))
+          if ((!going[x+dx+(y+dy)*8])&&getConnectedBobble(x+dx,y+dy,bobble,recursion)){
+            sum++;
+            sum+=getConnectedBobbles(x+dx,y+dy,bobble,recursion+1);
+            going[x+dx+(y+dy)*8]=true;
+          }
+  return sum;
+}
+
+bool BobbleGame::getConnectedBobble(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion){
+  return screen[x+y*8]==bobble;
 }
 
 CRGB BobbleGame::bobbleColor(uint8_t bobble){
@@ -53,6 +83,8 @@ void BobbleGame::initLevel(){
   colorMod=rand()%5+2;
   uint8_t mask=rand()&248;
   height=rand()%30+10;
+
+  mask=0;
 
   uint8_t c,m;
   for (uint16_t i=0;i<height*8;i++){
@@ -118,6 +150,9 @@ void BobbleGame::move(){
     case KEY_UP:rotateBobble(true);break;
     case KEY_DOWN:rotateBobble(false);break;
     case KEY_OK:shoot();break;
+
+    case KEY_5: yPos--;break;
+    case KEY_8: yPos++;break;
   }
 
   if (getKeyStatus(KEY_LEFT)&&(angle>-40))angle--;

@@ -49,6 +49,10 @@ class BobbleGame: public Game {
     void rotateBobble(bool up);
     void shoot();
     void initBobble(uint8_t i);
+    void drawScreen();
+    uint16_t getConnected(int8_t x, int16_t y, uint8_t bobble);
+    uint16_t getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion);
+    bool getConnectedBobble(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion);
 
   public:
     BobbleGame();

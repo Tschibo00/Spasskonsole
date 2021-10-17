@@ -55,7 +55,7 @@ void IRAM_ATTR onGameloop() {
 void setup() {
 Serial.begin(115200);
   
-  WiFi.mode(WIFI_STA);
+/*  WiFi.mode(WIFI_STA);
   WiFi.begin("TSQ", "ficken9000!#");
   while (WiFi.waitForConnectResult() != WL_CONNECTED)
     delay(5000);
@@ -76,7 +76,7 @@ Serial.begin(115200);
   ArduinoOTA.onError([](ota_error_t error) {
   });
   ArduinoOTA.begin();
-
+*/
   initKeyboardController();
   initDisplayController();
   initSoundController();
@@ -105,7 +105,7 @@ Serial.begin(115200);
 }
 
 void loop() {
-  ArduinoOTA.handle();
+//  ArduinoOTA.handle();
   displayShow();
   processSound();
 }
