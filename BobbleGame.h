@@ -24,6 +24,10 @@
 #define MAGIC_RAY 11
 #define MAGIC_RAINBOW 12
 
+#define BOB_STATE_MOVE 0
+#define BOB_STATE_FLY 1
+#define BOB_STATE_REMOVE 2
+
 class BobbleGame: public Game {
   private:
     uint8_t bobbles[3];
@@ -31,6 +35,10 @@ class BobbleGame: public Game {
     int8_t angle;
     uint8_t colDiv=4;
     int8_t flying=-1;
+    uint8_t gameState=BOB_STATE_MOVE;
+    uint8_t removeX;
+    uint16_t removeY;
+    uint8_t removeColor;
 
     uint8_t height;
     uint8_t colorMod;
@@ -52,7 +60,13 @@ class BobbleGame: public Game {
     void drawScreen();
     uint16_t getConnected(int8_t x, int16_t y, uint8_t bobble);
     uint16_t getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion);
-    bool getConnectedBobble(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion);
+    bool getConnectedBobble(int8_t x, int16_t y, uint8_t bobble);
+    bool checkAndRemoveConnected();
+    void initGoing();
+    uint8_t getConnectedAndRemove(int8_t x, int16_t y, uint8_t bobble);
+    void removeUnconnected();
+    uint16_t getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion);
+    bool getAnyConnectedBobble(int8_t x, int16_t y);
 
   public:
     BobbleGame();
