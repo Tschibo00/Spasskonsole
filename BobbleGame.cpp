@@ -13,24 +13,34 @@ void BobbleGame::play(){
   switch(gameState){
     case BOB_STATE_MOVE:{
       move();
-      Point hit=drawLineTest(4,7,4+angle,-20,bobbleColor(bobbles[0])/16);
-      set(hit.x,hit.y,bobbleColor(bobbles[0])/colDiv);
+      Point hit=drawLineTest(4,7,4+angle,-40,bobbleColor(bobbles[0])/16);
+
+
+
+//Serial.print(hit.x);Serial.print(" ");Serial.println(hit.y);
+
+
+      
+      setScreen(hit.x,hit.y,bobbleColor(bobbles[0])/colDiv);
       colDiv^=32;
       drawBobble(4,7,bobbles[0]);
       break;}
     case BOB_STATE_FLY:{
-      Point hit=drawLineTest(4,7,4+angle,-20,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16);
+      Point hit=drawLineTest(4,7,4+angle,-40,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16);
       if (hit.x>=0){
-        screen[hit.x+(hit.y+height-6)*8]=bobbles[0];
+
+
+//Serial.print("hit ");Serial.print(hit.x);Serial.print(" ");Serial.println(hit.y);
+
+
+//        screen[hit.x+(hit.y+height-6)*8]=bobbles[0];
+screen[hit.x+hit.y*8]=bobbles[0];
         flying=-1;
         if (getConnected(hit.x,hit.y,bobbles[0])>=2){// 3 connected, but the one that's shot isn't counted yet
           initGoing();
           removeX=hit.x;
           removeY=hit.y;
           removeColor=bobbles[0];
-
-Serial.print(removeX);Serial.print(" ");Serial.print(removeY);Serial.print(" ");Serial.println(removeColor);
-          
           gameState=BOB_STATE_REMOVE;
         }else{
           gameState=BOB_STATE_MOVE;
@@ -82,6 +92,17 @@ void BobbleGame::initGoing(){
 
 void BobbleGame::removeUnconnected(){
   initGoing();
+
+
+Serial.println("++++++++++++++++ BEFORE");
+for(int y=0;y<height;y++){
+  for(int x=0;x<8;x++)
+    Serial.print(screen[x+y*8]);
+  Serial.println();
+}
+
+
+  
   for (int8_t x=0;x<8;x++)
     if (screen[x]!=0)
       getAnyConnectedBobbles(x,0,0);
@@ -92,9 +113,23 @@ void BobbleGame::removeUnconnected(){
       bobblesRemoved++;
     }
   if (bobblesRemoved==8*40)Serial.println("CLEARED");
+
+  Serial.println("++++++++++++++++ AFTER");
+for(int y=0;y<height;y++){
+  for(int x=0;x<8;x++)
+    Serial.print(screen[x+y*8]);
+  Serial.println();
+}
+
+
+  
+  uint8_t lastLine=getLastLine()-6;
+  Serial.println(lastLine);
+  yPos=lastLine>=0?lastLine:0;
 }
 
 void BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
+  Serial.print(x);Serial.print(" ");Serial.print(y);Serial.print(" (");Serial.print(recursion);Serial.println(")");
   if (recursion>100)return;
 
   going[x+y*8]=true;
@@ -110,7 +145,7 @@ void BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
 }
 
 bool BobbleGame::getAnyConnectedBobble(int8_t x, int16_t y){
-  return screen[x+y*8]!=0;
+  return getHit(x,y);
 }
 
 uint8_t BobbleGame::getConnectedAndRemove(int8_t x, int16_t y, uint8_t bobble){
@@ -155,6 +190,7 @@ uint16_t BobbleGame::getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uin
 }
 
 bool BobbleGame::getConnectedBobble(int8_t x, int16_t y, uint8_t bobble){
+  if ((x<0)||(x>7)||(y<0)||(y>=height))return false;
   return screen[x+y*8]==bobble;
 }
 
@@ -173,9 +209,9 @@ void BobbleGame::initLevel(){
   srand(level);
   colorMod=rand()%5+2;
   uint8_t mask=rand()&248;
-  height=rand()%30+10;
+  height=rand()%29+10;  //height may not be larger than max height -2
 
-  height=7;//TODO REVERT
+//  height=6;//TODO REVERT
   mask=0;// TODO REVERT
 
   uint8_t c,m;
@@ -193,15 +229,15 @@ void BobbleGame::initLevel(){
     screen[i*8+3]=CRGB::Black;
   }
 
-
-for (uint8_t y=0;y<40;y++){
-  uint8_t i=y+1;
-  for (uint8_t x=0;x<8;x++){
-    screen[x+y*8]=i&1;
-    i=i>>1;
-  }
+/*
+uint16_t i;
+for(i=0;i<8*40;i++)screen[i]=0;
+for (i=0;i<16;i++)screen[i]=1;
+for (uint8_t y=2;y<40;y++){
+  screen[y*8]=2;
+  screen[y*8+6]=3;
 }
-
+*/
 
 
   initBobble(0);
@@ -259,8 +295,8 @@ void BobbleGame::move(){
     case KEY_8: if(yPos<33)yPos++;break;
   }
 
-  if (getKeyStatus(KEY_LEFT)&&(angle>-50))angle--;
-  if (getKeyStatus(KEY_RIGHT)&&(angle<50))angle++;
+  if (getKeyStatus(KEY_LEFT)&&(angle>-100))angle-=2;
+  if (getKeyStatus(KEY_RIGHT)&&(angle<100))angle+=2;
 }
 
 Point BobbleGame::drawLineTest(int x0,int y0,int x1,int y1, CRGB color){
@@ -271,26 +307,34 @@ Point BobbleGame::drawLineTest(int x0,int y0,int x1,int y1, CRGB color){
     steps=abs(x1-x0);
 
   if (steps==0)
-    return drawLineTest(x0,y0,0,0,0,color);
+    return drawLineTest(x0,y0+yPos,0,0,0,color);
   else
-    return drawLineTest(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,color);
+    return drawLineTest(x0,y0+yPos,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,color);
 }
 
 Point BobbleGame::drawLineTest(int x0,int y0,int dx,int dy, uint8_t steps, CRGB color){
   Point hit;
   hit.x=-1;
   hit.y=-1;
+
+
+
+//Serial.print(x0);Serial.print(" ");Serial.print(y0);Serial.print(" ");Serial.print(dx);Serial.print(" ");Serial.print(dy);Serial.print(" steps ");Serial.println(steps);
+
+
   
+
+
   x0=x0*256+128;
   y0=y0*256+128;
   for (uint8_t i = 0; i <= steps; i++) {
-    if (get(x0>>8,y0>>8)!=CRGB(0,0,0)) return hit;
-    set(x0>>8, y0>>8, color);
+    if (getHit(x0>>8,y0>>8))return hit;
+    setScreen(x0>>8, y0>>8, color);
     hit.x=x0>>8;
     hit.y=y0>>8;
     x0+=dx;
     y0+=dy;
-    if ((x0<256)||(x0>1792))dx=-dx;
+    if ((x0<256)||(x0>1792))dx=-dx;//bound of the edges
   }
 }
 
@@ -306,9 +350,9 @@ Point BobbleGame::drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bo
     steps=abs(x1-x0);
 
   if (steps==0)
-    return drawLineTest(x0,y0,0,0,0,index,bobble,color);
+    return drawLineTest(x0,y0+yPos,0,0,0,index,bobble,color);
   else
-    return drawLineTest(x0,y0,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,index,bobble,color);
+    return drawLineTest(x0,y0+yPos,(x1-x0)*256/steps,(y1-y0)*256/steps,steps,index,bobble,color);
 }
 
 Point BobbleGame::drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color){
@@ -319,16 +363,32 @@ Point BobbleGame::drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t
   x=x*256+128;
   y=y*256+128;
   for (uint8_t i = 0; i <= steps; i++) {
-    if (i==index){
-      if (get(x>>8,y>>8)!=CRGB(0,0,0))return hit;
-      set(x>>8, y>>8, bobble);
+
+
+//Serial.print("    ");Serial.print(x>>8);Serial.print(" ");Serial.println(y>>8);
+
+    
+    if (i>=index){
+      if (getHit(x>>8,y>>8))return hit;
+      setScreen(x>>8, y>>8, bobble);
     }
     hit.x=x>>8;
     hit.y=y>>8;
     x+=dx;
     y+=dy;
-    if ((x<256)||(x>1792))dx=-dx;
+    if ((x<256)||(x>1792))dx=-dx;//bounce of the edges
   }
   hit.x=hit.y=-1;
   return hit;
+}
+
+bool BobbleGame::getHit(int x,int y){
+  if ((x<0)||(x>7)||(y<0)||(y>=height)) return false;
+  if (getScreen(x,y)!=0)return true;
+}
+
+uint8_t BobbleGame::getLastLine(){
+  for (uint16_t y=height-1;y>=0;y--)
+    for (uint8_t x=0;x<8;x++)
+      if (screen[y*8+x]!=0) return y;
 }

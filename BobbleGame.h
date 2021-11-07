@@ -72,6 +72,10 @@ class BobbleGame: public Game {
     Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, CRGB color);
     Point drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color);
     Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color);
+    uint8_t getScreen(uint8_t x,uint8_t y){return screen[x+y*8];}
+    void setScreen(int x, int y, CRGB color){set(x,y-yPos,color);}
+    bool getHit(int x,int y);
+    uint8_t getLastLine();
 
   public:
     BobbleGame();
