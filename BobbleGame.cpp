@@ -123,7 +123,7 @@ for(int y=0;y<height;y++){
 
 
   
-  uint8_t lastLine=getLastLine()-6;
+  int8_t lastLine=getLastLine()-6;
   Serial.println(lastLine);
   yPos=lastLine>=0?lastLine:0;
 }
