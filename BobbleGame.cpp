@@ -28,6 +28,9 @@ void BobbleGame::play(){
           removeX=hit.x;
           removeY=hit.y;
           removeColor=bobbles[0];
+
+Serial.print(removeX);Serial.print(" ");Serial.print(removeY);Serial.print(" ");Serial.println(removeColor);
+          
           gameState=BOB_STATE_REMOVE;
         }else{
           gameState=BOB_STATE_MOVE;
@@ -82,9 +85,13 @@ void BobbleGame::removeUnconnected(){
   for (int8_t x=0;x<8;x++)
     if (screen[x]!=0)
       getAnyConnectedBobbles(x,0,0);
+  uint16_t bobblesRemoved=0;
   for (int i=0;i<8*40;i++)
-    if (!going[i])
+    if (!going[i]){
       screen[i]=0;
+      bobblesRemoved++;
+    }
+  if (bobblesRemoved==8*40)Serial.println("CLEARED");
 }
 
 void BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
@@ -168,7 +175,7 @@ void BobbleGame::initLevel(){
   uint8_t mask=rand()&248;
   height=rand()%30+10;
 
-  height=6;//TODO REVERT
+  height=7;//TODO REVERT
   mask=0;// TODO REVERT
 
   uint8_t c,m;
@@ -185,6 +192,17 @@ void BobbleGame::initLevel(){
     screen[i*8+2]=CRGB::Black;
     screen[i*8+3]=CRGB::Black;
   }
+
+
+for (uint8_t y=0;y<40;y++){
+  uint8_t i=y+1;
+  for (uint8_t x=0;x<8;x++){
+    screen[x+y*8]=i&1;
+    i=i>>1;
+  }
+}
+
+
 
   initBobble(0);
   initBobble(1);
@@ -237,8 +255,8 @@ void BobbleGame::move(){
     case KEY_DOWN:rotateBobble(false);break;
     case KEY_OK:shoot();break;
 
-    case KEY_5: yPos--;break;
-    case KEY_8: yPos++;break;
+    case KEY_5: if(yPos>0)yPos--;break;
+    case KEY_8: if(yPos<33)yPos++;break;
   }
 
   if (getKeyStatus(KEY_LEFT)&&(angle>-50))angle--;
