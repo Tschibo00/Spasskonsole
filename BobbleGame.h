@@ -65,7 +65,7 @@ class BobbleGame: public Game {
     void initGoing();
     uint8_t getConnectedAndRemove(int8_t x, int16_t y, uint8_t bobble);
     void removeUnconnected();
-    uint16_t getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion);
+    void getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion);
     bool getAnyConnectedBobble(int8_t x, int16_t y);
 
   public:

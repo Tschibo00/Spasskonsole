@@ -15,7 +15,6 @@ void BobbleGame::play(){
       move();
       Point hit=drawLineTest(4,7,4+angle,-20,bobbleColor(bobbles[0])/16);
       set(hit.x,hit.y,bobbleColor(bobbles[0])/colDiv);
-      Serial.println(getConnected(hit.x,hit.y,bobbles[0]));
       colDiv^=32;
       drawBobble(4,7,bobbles[0]);
       break;}
@@ -25,7 +24,6 @@ void BobbleGame::play(){
         screen[hit.x+(hit.y+height-6)*8]=bobbles[0];
         flying=-1;
         if (getConnected(hit.x,hit.y,bobbles[0])>=2){// 3 connected, but the one that's shot isn't counted yet
-          Serial.println("hit");
           initGoing();
           removeX=hit.x;
           removeY=hit.y;
@@ -82,15 +80,15 @@ void BobbleGame::initGoing(){
 void BobbleGame::removeUnconnected(){
   initGoing();
   for (int8_t x=0;x<8;x++)
-    getAnyConnectedBobbles(x,0,0);
+    if (screen[x]!=0)
+      getAnyConnectedBobbles(x,0,0);
   for (int i=0;i<8*40;i++)
     if (!going[i])
       screen[i]=0;
 }
 
-uint16_t BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
-  uint16_t sum=0;
-  if (recursion>100)return 0;
+void BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
+  if (recursion>100)return;
 
   going[x+y*8]=true;
 
@@ -99,11 +97,9 @@ uint16_t BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursi
       if ((dx!=0)||(dy!=0))
         if ((x+dx>=0)&&(x+dx<8)&&(y+dy>=0)&&(y+dy<height))
           if ((!going[x+dx+(y+dy)*8])&&getAnyConnectedBobble(x+dx,y+dy)){
-            sum++;
-            sum+=getAnyConnectedBobbles(x+dx,y+dy,recursion+1);
+            getAnyConnectedBobbles(x+dx,y+dy,recursion+1);
             going[x+dx+(y+dy)*8]=true;
           }
-  return sum;
 }
 
 bool BobbleGame::getAnyConnectedBobble(int8_t x, int16_t y){
@@ -124,11 +120,6 @@ uint8_t BobbleGame::getConnectedAndRemove(int8_t x, int16_t y, uint8_t bobble){
               screen[x+dx+(y+dy)*8]=0;
               sum++;
             }
-
-
-Serial.print(x);Serial.print(" ");Serial.print(y);Serial.print(" ");Serial.print(bobble);Serial.print(": ");Serial.println(sum);
-
-          
   return sum;
 }
 
@@ -250,6 +241,6 @@ void BobbleGame::move(){
     case KEY_8: yPos++;break;
   }
 
-  if (getKeyStatus(KEY_LEFT)&&(angle>-40))angle--;
-  if (getKeyStatus(KEY_RIGHT)&&(angle<40))angle++;
+  if (getKeyStatus(KEY_LEFT)&&(angle>-50))angle--;
+  if (getKeyStatus(KEY_RIGHT)&&(angle<50))angle++;
 }
