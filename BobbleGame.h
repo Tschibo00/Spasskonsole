@@ -67,6 +67,11 @@ class BobbleGame: public Game {
     void removeUnconnected();
     void getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion);
     bool getAnyConnectedBobble(int8_t x, int16_t y);
+    Point drawLineTest(Point p0,Point p1,uint8_t steps,CRGB color);
+    Point drawLineTest(int x0,int y0,int x1,int y1, CRGB color);
+    Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, CRGB color);
+    Point drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color);
+    Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color);
 
   public:
     BobbleGame();
