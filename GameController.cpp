@@ -35,6 +35,8 @@ void initGame(int game){
 }
 
 void play(){
+  if (longRunningJob)return;
+  
 	char select;
 	switch (state) {
     case GAME_BATTERY:

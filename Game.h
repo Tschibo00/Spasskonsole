@@ -13,6 +13,9 @@ static const char gameOverScreen[20] = { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 static const char gameOverMusic[4] = { 10, 9, 8, 7 };
 static const char victoryMusic[5] = { 13, PAUSE, 13, 13, 18 };
 */
+
+static bool longRunningJob=false;
+
 class Game {
 	private:
 /*		char scroller[9];

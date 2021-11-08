@@ -44,12 +44,16 @@ class BobbleGame: public Game {
     uint8_t colorMod;
     uint8_t yPos;
 
+    int x,y,i,dx,dy;
+    uint16_t bobblesRemoved;
+    int8_t lastLine;
+
     int8_t x0,y0,x1,y1;
 
     uint8_t screen[8*40];
     bool going[8*40];
     int level;
-  
+
     void initLevel();
     void move();
     CRGB bobbleColor(uint8_t bobble);
@@ -72,7 +76,8 @@ class BobbleGame: public Game {
     Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, CRGB color);
     Point drawLineTest(int x0,int y0,int x1,int y1,uint8_t index,CRGB bobble,CRGB color);
     Point drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t index, CRGB bobble,CRGB color);
-    uint8_t getScreen(uint8_t x,uint8_t y){return screen[x+y*8];}
+    uint8_t getScreen(int x,int y);
+    uint8_t getGoing(int x,int y);
     void setScreen(int x, int y, CRGB color){set(x,y-yPos,color);}
     bool getHit(int x,int y);
     uint8_t getLastLine();
