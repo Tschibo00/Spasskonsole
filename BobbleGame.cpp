@@ -45,7 +45,7 @@ screen[hit.x+hit.y*8]=bobbles[0];
         }else{
           gameState=BOB_STATE_MOVE;
           bobbles[0]=bobbles[1];
-          initBobble(1);
+          initBobble(1,true);
         }
       }else{
         flying++;
@@ -66,7 +66,8 @@ Serial.println("back in business");
         
         gameState=BOB_STATE_MOVE;
         bobbles[0]=bobbles[1];
-        initBobble(1);
+        initBobble(1,true);
+        initBobble(0,false);
       }
       break;
   }
@@ -77,7 +78,7 @@ void BobbleGame::drawBobble(uint8_t x,uint8_t y,uint8_t bobble){
 }
 
 void BobbleGame::drawScreen(){
-  for (i=0;i<8*6;i++)
+  for (i=0;i<6*8;i++)
     drawBobble(i%8,i/8,screen[i+yPos*8]);
 }
 
@@ -101,14 +102,15 @@ void BobbleGame::removeUnconnected(){
   
   initGoing();
 
-
+/*
 Serial.println("++++++++++++++++ BEFORE");
-for(y=0;y<height;y++){
+Serial.print("height ");Serial.print(height);Serial.print(" ypos ");Serial.println(yPos);
+for(y=0;y<40;y++){
   for(x=0;x<8;x++)
     Serial.print(screen[x+y*8]);
   Serial.println();
 }
-
+*/
 
 for(x=0;x<8;x++)if(getScreen(x,0))going[x]=true;
 for(i=0;i<40;i++){
@@ -137,7 +139,8 @@ for(i=0;i<40;i++){
   if (bobblesRemoved==8*40)Serial.println("CLEARED");
 
   Serial.println("++++++++++++++++ AFTER");
-for(y=0;y<height;y++){
+Serial.print("height ");Serial.print(height);Serial.print(" ypos ");Serial.println(yPos);
+for(y=0;y<40;y++){
   for(x=0;x<8;x++)
     Serial.print(screen[x+y*8]);
   Serial.println();
@@ -145,9 +148,10 @@ for(y=0;y<height;y++){
 
 
   
-  lastLine=getLastLine()-6;
+  lastLine=getLastLine()-5;
   Serial.println(lastLine);
   yPos=lastLine>=0?lastLine:0;
+Serial.print("ypos ");Serial.println(yPos);
 
   longRunningJob=false;
 }
@@ -247,16 +251,26 @@ void BobbleGame::initLevel(){
     screen[i]=c|m;
   }
 
-  //TODO REVERT
+/*  //TODO REVERT
   for(i=0;i<height;i++){
     screen[i*8]=0;
     screen[i*8+1]=0;
     screen[i*8+2]=0;
     screen[i*8+3]=0;
   }
+  */
+
+/*
+for (y=0;y<6;y++)
+for(x=0;x<8;x++)
+screen[y*8+x]=(y+x)%colorMod;
+height=6;
+*/
+
+removeUnconnected();
   
-  initBobble(0);
-  initBobble(1);
+  initBobble(0,true);
+  initBobble(1,true);
 
   yPos=height-6;
   angle=0;
@@ -292,10 +306,22 @@ void BobbleGame::shoot(){
   flying=1;
 }
 
-void BobbleGame::initBobble(uint8_t i){
-  do{
-    bobbles[i]=rand()%colorMod;
-  }while(bobbles[i]==0);
+void BobbleGame::initBobble(uint8_t i,bool randomize){
+  if(randomize){
+    do{
+      bobbles[i]=rand()%colorMod;
+    }while((bobbles[i]==0)||(!checkIfColorAvailable(bobbles[i])));
+  }else{
+    while((bobbles[i]==0)||(!checkIfColorAvailable(bobbles[i]))){
+      bobbles[i]=rand()%colorMod;
+    }
+  }
+}
+
+bool BobbleGame::checkIfColorAvailable(uint8_t bobbleColor){
+  for(i=0;i<8*40;i++)
+    if(screen[i]==bobbleColor)return true;
+  return false;
 }
 
 void BobbleGame::move(){

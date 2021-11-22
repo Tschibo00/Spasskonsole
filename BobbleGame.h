@@ -60,7 +60,8 @@ class BobbleGame: public Game {
     void drawBobble(uint8_t x,uint8_t y,uint8_t bobble);
     void rotateBobble(bool up);
     void shoot();
-    void initBobble(uint8_t i);
+    void initBobble(uint8_t i,bool randomize);
+    bool checkIfColorAvailable(uint8_t bobbleColor);
     void drawScreen();
     uint16_t getConnected(int8_t x, int16_t y, uint8_t bobble);
     uint16_t getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion);
