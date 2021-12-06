@@ -8,10 +8,9 @@
 #include "DisplayController.h"
 #include "SoundController.h"
 #include "MemController.h"
+#include "TimerController.h"
 
 hw_timer_t *timerSound=NULL;
-hw_timer_t *timerGameloop=NULL;
-hw_timer_t *timerKeyboard=NULL;
 
 // my own version of the the ledcwrite library function, because it crashes in combination with I2C communication when using the mutex
 #define LEDC_CHAN(g,c) LEDC.channel_group[(g)].channel[(c)]
@@ -43,14 +42,6 @@ void my_ledcWrite(uint8_t chan, uint32_t duty){
 /*  int16_t o;
   my_ledcWrite(PWM_CHANNEL, o<<1);  // use 11bit PWM*/
 //}
-
-void IRAM_ATTR onKeyboard() {
-  scanKeyboard();
-}
-
-void IRAM_ATTR onGameloop() {
-  play();
-}
 
 void setup() {
 Serial.begin(115200);
@@ -91,17 +82,8 @@ Serial.begin(115200);
   timerStart(timerSound);
   timerAlarmEnable(timerSound);
 */
-  timerGameloop=timerBegin(1, 80, true);                    // pre-scaler of 80, resulting in 1Mhz
-  timerAttachInterrupt(timerGameloop, &onGameloop, true);
-  timerAlarmWrite(timerGameloop, 40000, true);              // called 25 times/s
-  timerStart(timerGameloop);
-  timerAlarmEnable(timerGameloop);
-
-  timerKeyboard=timerBegin(2, 80, true);                    // pre-scaler of 80, resulting in 1Mhz
-  timerAttachInterrupt(timerKeyboard, &onKeyboard, true);
-  timerAlarmWrite(timerKeyboard, 8000, true);              // called 125 times/s
-  timerStart(timerKeyboard);
-  timerAlarmEnable(timerKeyboard);
+  initTimers();
+  startTimers();
 }
 
 void loop() {

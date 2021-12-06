@@ -19,6 +19,8 @@ void initKeyboardController(){
 }
 
 void scanKeyboard(){
+//  setTimerKeyboardRunning(true);
+  
 	uint8_t i;
 
   // read inputs with the last activated row
@@ -29,6 +31,8 @@ void scanKeyboard(){
   scanRow=(scanRow+1)%5;
   for (i = 0; i < 5; i++)
     digitalWrite(keyLatchPin[i], i==scanRow);
+
+  //setTimerKeyboardRunning(false);
 }
 
 bool getKeyStatus(uint8_t key){

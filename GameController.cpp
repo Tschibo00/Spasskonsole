@@ -35,7 +35,7 @@ void initGame(int game){
 }
 
 void play(){
-  if (longRunningJob)return;
+  setTimerGameRunning(true);
   
 	char select;
 	switch (state) {
@@ -101,6 +101,8 @@ void play(){
 			runningGame->play();
 			break;
 	}
+
+  setTimerGameRunning(false);
 }
 
 void showPlayerName(uint8_t player){

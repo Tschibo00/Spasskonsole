@@ -6,6 +6,7 @@
 #include "DisplayController.h"
 #include "KeyboardController.h"
 #include "SoundController.h"
+#include "TimerController.h"
 //#include "MemController.h"
 /*
 static const char victoryScreen[20] = { 0, 0, 15, 15, 0, 0, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 };
