@@ -83,7 +83,6 @@ Serial.begin(115200);
   timerAlarmEnable(timerSound);
 */
   initTimers();
-  startTimers();
 }
 
 void loop() {

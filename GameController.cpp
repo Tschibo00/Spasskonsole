@@ -35,8 +35,6 @@ void initGame(int game){
 }
 
 void play(){
-  setTimerGameRunning(true);
-  
 	char select;
 	switch (state) {
     case GAME_BATTERY:
@@ -101,8 +99,6 @@ void play(){
 			runningGame->play();
 			break;
 	}
-
-  setTimerGameRunning(false);
 }
 
 void showPlayerName(uint8_t player){
