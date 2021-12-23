@@ -52,7 +52,6 @@ class BobbleGame: public Game {
 
     uint8_t screen[8*40];
     bool going[8*40];
-    int level;
 
     void initLevel();
     void move();

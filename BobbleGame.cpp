@@ -104,6 +104,7 @@ void BobbleGame::removeUnconnected(){
     Serial.println("CLEARED");
     level++;
     initLevel();
+    showLevel();
   }
   
   lastLine=getLastLine()-5;

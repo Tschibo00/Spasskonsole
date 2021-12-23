@@ -96,7 +96,7 @@ void play(){
       showPlayerName(selectedPlayer);
 			break;
 		case GAME_RUNNING:
-			runningGame->play();
+			runningGame->playGame();
 			break;
 	}
 }
@@ -122,3 +122,4 @@ void showPlayerName(uint8_t player){
       break;
   }
 }
+ 
