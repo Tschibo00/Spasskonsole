@@ -10,9 +10,7 @@ void IRAM_ATTR onKeyboard() {
 }
 
 void IRAM_ATTR onGameloop() {
-  Serial.println("timer begin");
   play();
-  Serial.println("timer end");
 }
 
 void initTimers(){ 
@@ -23,7 +21,7 @@ void initTimers(){
 
   timerKeyboard=timerBegin(2, 80, true);                    // pre-scaler of 80, resulting in 1Mhz
   timerAttachInterrupt(timerKeyboard, &onKeyboard, true);
-  timerAlarmWrite(timerKeyboard, 8000, true);              // called 125 times/s
+  timerAlarmWrite(timerKeyboard, 8000, true);               // called 125 times/s
   timerStart(timerKeyboard);
 
   timerAlarmEnable(timerGameloop);

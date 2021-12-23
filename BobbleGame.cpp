@@ -100,7 +100,11 @@ void BobbleGame::removeUnconnected(){
       screen[i]=0;
       bobblesRemoved++;
     }
-  if (bobblesRemoved==8*40)Serial.println("CLEARED");
+  if (bobblesRemoved==8*40){
+    Serial.println("CLEARED");
+    level++;
+    initLevel();
+  }
   
   lastLine=getLastLine()-5;
   yPos=lastLine>=0?lastLine:0;

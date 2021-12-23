@@ -10,6 +10,14 @@
 #include "MemController.h"
 #include "TimerController.h"
 
+/*
+ * TODOs
+ * Shooting a bobble below the last line doesn't remove any bobbles
+ * Detection of connected bobbles when shooting doesn't count all surrounding bobbles => however bobbles are removed correctly
+ * Show next level after finishing
+ * Smooth scrolling if possible
+ */
+
 hw_timer_t *timerSound=NULL;
 
 // my own version of the the ledcwrite library function, because it crashes in combination with I2C communication when using the mutex
