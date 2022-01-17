@@ -55,12 +55,13 @@ class Game {
 
   void showLevel(){
     state=GAME_STATE_SHOW_LEVEL;
-    scrollPos=80;
+    scrollPos=0;
   }
   
   void showLevelNumber(){
-    memset(scroller,32,16);
-    sprintf(scroller, "Level %d", level);
+//    memset(scroller,32,16);
+    int l=sprintf(scroller, "Level %d", level);
+    scroller[l]=32;
     scrollPos++;
     showScroller(scroller,scrollPos/2,true,EFFECT_FADE,CRGB::Blue,CRGB::Green);
     if (scrollPos>160) scrollPos=-16;
