@@ -393,6 +393,14 @@ Point BobbleGame::drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t
     x+=dx;
     y+=dy;
     if ((x<256)||(x>1792))dx=-dx;//bounce of the edges
+
+    if (y<0){
+    hit.x=x>>8;
+    hit.y=0;
+    return hit;
+    }
+
+    Serial.print(x);Serial.print("  ");Serial.println(y);
   }
   hit.x=hit.y=-1;
   return hit;
