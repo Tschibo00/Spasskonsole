@@ -21,20 +21,26 @@ void BobbleGame::play(){
     case BOB_STATE_FLY:{
       Point hit=drawLineTest(4,7,4+angle,-40,flying,bobbleColor(bobbles[0]),bobbleColor(bobbles[0])/16);
       if (hit.x>=0){
+        Serial.println("hit 0");
         screen[hit.x+hit.y*8]=bobbles[0];
+        adjustLastLine();
         flying=-1;
         if (getConnected(hit.x,hit.y,bobbles[0])>=2){// 3 connected, but the one that's shot isn't counted yet
+        Serial.println("connected>2");
           initGoing();
           removeX=hit.x;
           removeY=hit.y;
           removeColor=bobbles[0];
           gameState=BOB_STATE_REMOVE;
         }else{
+        Serial.println("state_move");
           gameState=BOB_STATE_MOVE;
           bobbles[0]=bobbles[1];
           initBobble(1,true);
         }
+        Serial.println("adjust last line");
       }else{
+        Serial.println("flying++");
         flying++;
         if (flying>50){
           flying=-1;
@@ -43,7 +49,9 @@ void BobbleGame::play(){
       }
       break;}
     case BOB_STATE_REMOVE:
+        Serial.println("remove");
       if (checkAndRemoveConnected()){
+        Serial.println("remove unconnected");
         removeUnconnected();
         gameState=BOB_STATE_MOVE;
         bobbles[0]=bobbles[1];
@@ -106,9 +114,17 @@ void BobbleGame::removeUnconnected(){
     initLevel();
     showLevel();
   }
-  
+
+  adjustLastLine();
+}
+
+void BobbleGame::adjustLastLine(){
+  Serial.print("lastline before ");Serial.println(lastLine);
   lastLine=getLastLine()-5;
+  Serial.print("lastline after ");Serial.println(lastLine);
   yPos=lastLine>=0?lastLine:0;
+//  Serial.print("height ");Serial.println(height);
+//  height=lastLine+5;
 }
 
 void BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
@@ -150,15 +166,24 @@ uint8_t BobbleGame::getConnectedAndRemove(int8_t x, int16_t y, uint8_t bobble){
 uint16_t BobbleGame::getConnected(int8_t x,int16_t y,uint8_t bobble){
   initGoing();
   uint16_t result=getConnectedBobbles(x,y,bobble,0);
+
+Serial.print("connected ");
+Serial.println(result);
+  
   return result;
 }
 
 uint16_t BobbleGame::getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion){
 uint16_t sum=0;
 uint16_t oldSum;
+
+int oldHeight=height;
+height=40;
+
 //TODO UNCOMMENT  do{
 oldSum=sum;
 going[x+y*8]=true;
+for (i=0;i<40;i++)
 for(y0=0;y0<height;y0++)
 for(x0=0;x0<8;x0++)
 if (going[x0+y0*8])
@@ -174,6 +199,8 @@ if (going[x0+y0*8])
           }
 //TODO UNCOMMENT  }while(sum>oldSum);
 //  Serial.print("sum ");Serial.println(sum);
+
+  height=oldHeight;
   
   return sum;
 }
@@ -376,7 +403,7 @@ bool BobbleGame::getHit(int x,int y){
 }
 
 uint8_t BobbleGame::getLastLine(){
-  for (y=height-1;y>=0;y--)
+  for (y=39;y>=0;y--)
     for (x=0;x<8;x++)
       if (screen[y*8+x]!=0) return y;
 }

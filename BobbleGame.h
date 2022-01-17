@@ -81,6 +81,7 @@ class BobbleGame: public Game {
     void setScreen(int x, int y, CRGB color){set(x,y-yPos,color);}
     bool getHit(int x,int y);
     uint8_t getLastLine();
+    void adjustLastLine();
 
   public:
     BobbleGame();
