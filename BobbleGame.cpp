@@ -395,7 +395,7 @@ Point BobbleGame::drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t
     if ((x<256)||(x>1792))dx=-dx;//bounce of the edges
 
     if (y<0){
-    hit.x=x>>8;
+    hit.x=(x-dx)>>8;
     hit.y=0;
     return hit;
     }
@@ -407,7 +407,7 @@ Point BobbleGame::drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t
 }
 
 bool BobbleGame::getHit(int x,int y){
-  return getScreen(x,y)!=0;
+  return (y<0)||(getScreen(x,y)!=0);
 }
 
 uint8_t BobbleGame::getLastLine(){
