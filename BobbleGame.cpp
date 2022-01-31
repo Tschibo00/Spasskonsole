@@ -8,6 +8,9 @@ BobbleGame::BobbleGame(){
 void BobbleGame::play(){
   clear(CRGB::Black);
 
+  if (targetLine<yPos)yPos--;
+  if (targetLine>yPos)yPos++;
+
   drawScreen();
 
   switch(gameState){
@@ -119,12 +122,8 @@ void BobbleGame::removeUnconnected(){
 }
 
 void BobbleGame::adjustLastLine(){
-  Serial.print("lastline before ");Serial.println(lastLine);
   lastLine=getLastLine()-5;
-  Serial.print("lastline after ");Serial.println(lastLine);
-  yPos=lastLine>=0?lastLine:0;
-//  Serial.print("height ");Serial.println(height);
-//  height=lastLine+5;
+  targetLine=lastLine>=0?lastLine:0;
 }
 
 void BobbleGame::getAnyConnectedBobbles(int8_t x, int16_t y, uint8_t recursion){
@@ -260,7 +259,8 @@ removeUnconnected();
   initBobble(0,true);
   initBobble(1,true);
 
-  yPos=height-6;
+  targetLine=height-6;
+  yPos=0;
   angle=0;
 }
 

@@ -40,6 +40,8 @@ class BobbleGame: public Game {
     uint16_t removeY;
     uint8_t removeColor;
 
+    uint8_t targetLine;
+
     uint8_t height;
     uint8_t colorMod;
     uint8_t yPos;
