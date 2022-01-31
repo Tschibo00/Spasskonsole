@@ -3,6 +3,8 @@
 BobbleGame::BobbleGame(){
   level=0;
   initLevel();
+
+  
 }
 
 void BobbleGame::play(){
@@ -164,41 +166,31 @@ uint8_t BobbleGame::getConnectedAndRemove(int8_t x, int16_t y, uint8_t bobble){
 
 uint16_t BobbleGame::getConnected(int8_t x,int16_t y,uint8_t bobble){
   initGoing();
-  uint16_t result=getConnectedBobbles(x,y,bobble,0);
-
-Serial.print("connected ");
-Serial.println(result);
-  
-  return result;
+  return getConnectedBobbles(x,y,bobble,0);
 }
 
 uint16_t BobbleGame::getConnectedBobbles(int8_t x, int16_t y, uint8_t bobble,uint8_t recursion){
-uint16_t sum=0;
-uint16_t oldSum;
-
-int oldHeight=height;
-height=40;
-
-//TODO UNCOMMENT  do{
-oldSum=sum;
-going[x+y*8]=true;
-for (i=0;i<40;i++)
-for(y0=0;y0<height;y0++)
-for(x0=0;x0<8;x0++)
-if (going[x0+y0*8])
+  uint16_t sum=0;
+  uint16_t oldSum;
+  
+  int oldHeight=height;
+  height=40;
+  
+  oldSum=sum;
+  going[x+y*8]=true;
+  for (i=0;i<40;i++)
+  for(y0=0;y0<height;y0++)
+  for(x0=0;x0<8;x0++)
+  if (going[x0+y0*8])
 
   for (dy=-1;dy<=1;dy++)
     for (dx=-1;dx<=1;dx++)
       if ((dx!=0)||(dy!=0))
         if ((x0+dx>=0)&&(x0+dx<8)&&(y0+dy>=0)&&(y0+dy<height))
           if ((!going[x0+dx+(y0+dy)*8])&&getConnectedBobble(x0+dx,y0+dy,bobble)){
-//            Serial.print(x0+dx);Serial.print(" ");Serial.println(y0+dy);
             sum++;
             going[x0+dx+(y0+dy)*8]=true;
           }
-//TODO UNCOMMENT  }while(sum>oldSum);
-//  Serial.print("sum ");Serial.println(sum);
-
   height=oldHeight;
   
   return sum;
@@ -226,7 +218,6 @@ void BobbleGame::initLevel(){
   uint8_t mask=rand()&248;
   height=rand()%29+10;  //height may not be larger than max height -2
 
-//  height=6;//TODO REVERT
   mask=0;// TODO REVERT
 
   for(i=0;i<8*40;i++)screen[i]=0;
@@ -238,28 +229,19 @@ void BobbleGame::initLevel(){
     screen[i]=c|m;
   }
 
-/*  //TODO REVERT
-  for(i=0;i<height;i++){
-    screen[i*8]=0;
-    screen[i*8+1]=0;
-    screen[i*8+2]=0;
-    screen[i*8+3]=0;
+  angle=3+rand()%6;
+  x=height*8-rand()%8-1;
+  while(x>48){
+    screen[x]=0;
+    x-=angle;
   }
-  */
 
-/*
-for (y=0;y<6;y++)
-for(x=0;x<8;x++)
-screen[y*8+x]=(y+x)%colorMod;
-height=6;
-*/
-
-removeUnconnected();
+  removeUnconnected();
   
   initBobble(0,true);
   initBobble(1,true);
 
-  targetLine=height-6;
+  adjustLastLine();
   yPos=0;
   angle=0;
 }
@@ -399,8 +381,6 @@ Point BobbleGame::drawLineTest(int x,int y,int dx,int dy, uint8_t steps, uint8_t
     hit.y=0;
     return hit;
     }
-
-    Serial.print(x);Serial.print("  ");Serial.println(y);
   }
   hit.x=hit.y=-1;
   return hit;

@@ -5,7 +5,7 @@
 
 void openGame(char *gameName, uint8_t player);
 void put(char *key,int32_t value);
-int get(char *key);
+int32_t get(char *key);
 void closeGame();
 
 #endif

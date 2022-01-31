@@ -18,7 +18,7 @@ void put(char *key,int32_t value){
   preferences.putLong(key,value);
 }
 
-int get(char *key){
+int32_t get(char *key){
   preferences.getLong(key);
 }
 
