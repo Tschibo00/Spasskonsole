@@ -3,8 +3,6 @@
 BobbleGame::BobbleGame(){
   level=0;
   initLevel();
-
-  
 }
 
 void BobbleGame::play(){
