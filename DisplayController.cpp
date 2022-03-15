@@ -259,7 +259,7 @@ void showDigit37(uint8_t num, CRGB c, uint8_t x){
       set(x,2,c); set(x+1,2,c);
       set(x+1,3,c);
       set(x+1,4,c);
-      set(x,5,c); set(x+1,5,c); set(x+2,5,c);
+      set(x+1,5,c);
       break;
     case 2:
       set(x,1,c); set(x+1,1,c);
@@ -322,10 +322,16 @@ void showDigit37(uint8_t num, CRGB c, uint8_t x){
 
 void showNumber37(int8_t num){
   int8_t n=abs(num);
-  bool neg=(num<0);
-  if (n>99) n=99;
-  showDigit37(n/10, neg?CRGB::Red:CRGB::Green, 0);
-  showDigit37(n%10, neg?CRGB::Red:CRGB::Green, 4);
+  CRGB c=num<0?CRGB::Red:CRGB::Green;
+  if (n>199) n=199;
+  if (n>99){
+    showDigit37(1,c,0);
+    showDigit37((n/10)%10, c, 2);
+    showDigit37(n%10, c, 5);
+  }else{
+    showDigit37(n/10, c, 0);
+    showDigit37(n%10, c, 4);
+  }
 }
 
 // Helper function that blends one uint8_t toward another by a given amount

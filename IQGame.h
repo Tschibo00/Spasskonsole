@@ -5,9 +5,9 @@
 
 class IQGame: public Game {
 	private:
-
+    uint8_t countdown;
+    uint8_t iq;
 		void initLevel();
-		void move();
     
 	public:
 		IQGame();

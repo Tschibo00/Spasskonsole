@@ -5,22 +5,18 @@ IQGame::IQGame(){
 }
 
 void IQGame::play(){
+  if (countdown>0){
+    iq=rand()%30+90;
+    countdown--;
+  }
+
 	clear(CRGB::Black);
+  showNumber37(iq);
+
+  if (anyKeyClick(0,23))
+    initLevel();
 }
 
 void IQGame::initLevel(){
-}
-
-void IQGame::move(){
- 
-	switch (getNumberClick()) {
-    case KEY_UP:
-      break;
-    case KEY_DOWN:
-      break;
-    case KEY_LEFT:
-      break;
-    case KEY_RIGHT:
-      break;
-	}
+  countdown=30;
 }
