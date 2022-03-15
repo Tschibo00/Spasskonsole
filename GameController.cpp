@@ -29,6 +29,12 @@ void initGame(int game){
     case 1:
       runningGame = new BobbleGame();
       break;
+    case 2:
+      runningGame = new IQGame();
+      break;
+    case 3:
+      runningGame = new MemTestGame();
+      break;
 	}
 	if (runningGame->needsPlayerSelection())
 		state = GAME_PLAYER_SELECTION;

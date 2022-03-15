@@ -1,28 +1,12 @@
-#ifndef BOSSGAME_H_
-#define BOSSGAME_H_
+#ifndef MEMTESTGAME_H_
+#define MEMTESTGAME_H_
 
 #include "Game.h"
 
-class BossGame: public Game {
+class MemTestGame: public Game {
 	private:
-    int8_t x,y;
-    int8_t xB,yB;
-    int bossEnd;
-    int bossNextStep;
-    int bossSpeed;
-    int8_t bossCounter;
-    bool isBoss;
-    bool isLeaving;
-    uint16_t survived;
-    int8_t safety;
-    int16_t showingScore;
-    char score[6];
-    uint8_t screen[64];
-
 		void initLevel();
 		void move();
-    void initBoss();
-    void moveBoss();
 
     bool setChar(uint8_t i,uint8_t n, bool showZero){
       if (i>4)return false;
@@ -43,7 +27,7 @@ class BossGame: public Game {
     }
     
 	public:
-		BossGame();
+		MemTestGame();
 		void play() override;
     bool needsPlayerSelection() override{
       return false;

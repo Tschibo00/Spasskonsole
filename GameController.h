@@ -4,6 +4,8 @@
 #include "Game.h"
 #include "BossGame.h"
 #include "BobbleGame.h"
+#include "MemTestGame.h"
+#include "IQGame.h"
 #include <math.h>
 //#include "avr/pgmspace.h"
 
