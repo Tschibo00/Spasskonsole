@@ -2,12 +2,9 @@
 #define MEMTESTGAME_H_
 
 #include "Game.h"
+#include "MemController.h"
 
 class MemTestGame: public Game {
-	private:
-		void initLevel();
-		void move();
-
 	public:
 		MemTestGame();
 		void play() override;

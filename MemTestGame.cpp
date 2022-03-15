@@ -1,26 +1,24 @@
 #include "MemTestGame.h"
 
 MemTestGame::MemTestGame(){
-	initLevel();
 }
 
 void MemTestGame::play(){
 	clear(CRGB::Black);
-}
 
-void MemTestGame::initLevel(){
-}
+Serial.println("a");
 
-void MemTestGame::move(){
- 
-	switch (getNumberClick()) {
-    case KEY_UP:
-      break;
-    case KEY_DOWN:
-      break;
-    case KEY_LEFT:
-      break;
-    case KEY_RIGHT:
-      break;
-	}
+  openGame("bla", 0);
+Serial.println("b");
+  int32_t bla=get("bla");
+Serial.println("c");
+  showNumber37(bla);
+
+  bla=bla+1;
+  if (bla>99) bla=0;
+Serial.println("d");
+  put("bla", bla);
+Serial.println("e");
+  closeGame();
+Serial.println("f");
 }

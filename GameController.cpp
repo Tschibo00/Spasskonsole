@@ -99,21 +99,6 @@ void play(){
           resetPlayer=false;  // TODO REMOVE
           runningGame->selectPlayer(selectedPlayer, resetPlayer);
           state = GAME_RUNNING;
-
-
-//TODO MEM TEST 196150922
-/*          openGame("bla", selectedPlayer);
-          int32_t bla=get("bla");
-          Serial.print("old mem value ");
-          Serial.println(bla);
-
-          bla=rand();
-          Serial.print("random mem value ");
-          Serial.println(bla);
-          put("bla", bla);
-          closeGame();
-*/
-          
           break;
       }
       showPlayerName(selectedPlayer);

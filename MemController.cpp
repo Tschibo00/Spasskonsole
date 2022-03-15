@@ -11,7 +11,10 @@ void openGame(char *gameName, uint8_t player){
     gn[i]=gameName[i];
   gn[i]=player+48;
   gn[i+1]=0;
-  preferences.begin(gn,false);
+  Serial.println("aa");
+  Serial.println(gn);
+  if (!preferences.begin(gn,false))
+    Serial.println("fail");
 }
 
 void put(char *key,int32_t value){

@@ -76,6 +76,7 @@ Serial.begin(115200);
   });
   ArduinoOTA.begin();
 */
+
   initKeyboardController();
   initDisplayController();
   initSoundController();
